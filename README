@@ -1,0 +1,5 @@
+Please create and read the docs with
+
+  $ cd doc
+  $ make gcklib.html
+  $ xdg-open gnulib.html
