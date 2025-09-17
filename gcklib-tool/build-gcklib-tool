@@ -4,23 +4,31 @@ TOOL=$1
 FILES=${@:2}
 
 for f in "$FILES"; do
-mapfile -t CONTENTS < f
+if [ -f "$f" ]; then
+content=$(cat $"f")
+CONTENTS="${CONTENTS} \"${content}\""
+fi
 done
 
 cat <<EOF > $TOOL
 #!/bin/sh
+
+FILES=$FILES
+CONTENTS=$CONTENTS
 
 fatal() {
   echo "fatal: $*" >&2
   exit 1
 }
 
-new() {
-  local path=$1
-  local source=$2
-  echo "$source" > "$path"
-}
-
 mkdir lib && cd lib
+
+i=0
+for f in "$FILES"; do
+((i++))
+if [ -f "f" ]; then
+echo $(echo "$CONTENTS" | cut -d' ' -f"$i")  > "$f"
+fi
+done
 
 EOF
