@@ -1,33 +1,34 @@
 #!/bin/sh
 
 TOOL=$1
-FILES=${@:2}
+LFILES=${@:2}
+LCONTENTS=""
 
-for f in "$FILES"; do
-if [ -f "$f" ]; then
-content=$(cat $"f")
-CONTENTS="${CONTENTS} \"${content}\""
+for file in "$LFILES"; do
+if [ -f "$file" ]; then
+local content=$(cat $"file")
+LCONTENTS="${LCONTENTS} \"${content}\""
 fi
 done
 
 cat <<EOF > $TOOL
 #!/bin/sh
 
-FILES=$FILES
-CONTENTS=$CONTENTS
+FILES="$LFILES"
+CONTENTS="$LCONTENTS"
 
 fatal() {
-  echo "fatal: $*" >&2
+  echo "fatal: \$*" >&2
   exit 1
 }
 
 mkdir lib && cd lib
 
 i=0
-for f in "$FILES"; do
+for f in "\$FILES"; do
 ((i++))
-if [ -f "f" ]; then
-echo $(echo "$CONTENTS" | cut -d' ' -f"$i")  > "$f"
+if [ -f "\$f" ]; then
+echo \$(echo "\$CONTENTS" | cut -d' ' -f"\$i")  >"\$f"
 fi
 done
 
