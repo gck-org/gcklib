@@ -1,0 +1,26 @@
+#!/bin/sh
+
+TOOL=$1
+FILES=${@:2}
+
+for f in "$FILES"; do
+mapfile -t CONTENTS < f
+done
+
+cat <<EOF > $TOOL
+#!/bin/sh
+
+fatal() {
+  echo "fatal: $*" >&2
+  exit 1
+}
+
+new() {
+  local path=$1
+  local source=$2
+  echo "$source" > "$path"
+}
+
+mkdir lib && cd lib
+
+EOF
