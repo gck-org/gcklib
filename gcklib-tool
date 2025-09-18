@@ -18,6 +18,7 @@ Usage: $prog_name [OPTION]...
       --list     print avaliable modules.
       --import   import named module into current package.
       --update   update packages in your current gcklib.
+	  --remove   remove a package from current package.
 
 EOF
 }
@@ -37,9 +38,33 @@ list() {
 
 import() {
 	local module=$1
-	module=$($module | xarg)
-	cp ${module}.h lib/
-	cp ${nodule}.c lib/
+	module=$($module | xargs)
+	cp lib/${module}.h ../lib/
+	cp lib/${nodule}.c ../lib/
+}
+
+remove() {
+	local module=$1
+	module=$($module | xargs)
+	rm ../lib/${module}.h ../lib/${module}.c
+}
+
+update() {
+	local module=$1
+	module=$($module | xargs)
+
+	if [ $# -eq 0 ]; then
+		for f in lib/*; do
+			update $f
+		done
+	else
+		if [ stat -c "%Y" ../lib/${module}.c -lt stat -c "%Y" lib/${module}.c ]; then
+			cp lib/${module}.c ../lib/{module}.c
+		fi
+		if [ stat -c "%Y" ../lib/${module}.h -lt stat -c "%Y" lib/${module}.h ]; then
+			cp lib/${module}.h ../lib/{module}.h
+		fi
+	fi
 }
 
 [ ! -f "./gcklib-tool" ] && fatal run this in the gcklib directory.
