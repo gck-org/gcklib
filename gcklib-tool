@@ -10,7 +10,7 @@ fatal() {
 }
 
 usage() {
-cat <<EOF
+	cat <<EOF
 Usage: $prog_name [OPTION]...
 
       --help     print this help and exit.
@@ -23,7 +23,7 @@ EOF
 }
 
 version() {
-cat <<EOF
+	cat <<EOF
 $prog_name $version $(git rev-list --count --all)
 Copyright (C) $year GCK.
 This is free software: you are free to change and redistribute it.
@@ -32,9 +32,15 @@ EOF
 }
 
 list() {
-ls lib | grep ".c" | cut -d. -f1
+	ls lib | grep ".c" | cut -d. -f1
 }
 
+import() {
+	local module=$1
+	module=$($module | xarg)
+	cp ${module}.h lib/
+	cp ${nodule}.c lib/
+}
 
 [ ! -f "./gcklib-tool" ] && fatal run this in the gcklib directory.
 
@@ -43,7 +49,7 @@ case "$arg" in
 --help) usage ;;
 --version) version ;;
 --list) list ;;
---import) echo "TODO" ;;
+--import) import ${arg#*} ;;
 --update) echo "TODO" ;;
 *) printf "Unrecognized option %s\n" "$arg" ;;
 esac
