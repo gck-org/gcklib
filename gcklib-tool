@@ -74,8 +74,8 @@ case "$arg" in
 --help) usage ;;
 --version) version ;;
 --list) list ;;
---import) import ${arg#*} ;;
---update) echo "TODO" ;;
+--import*) import ${arg#*=} ;;
+--update*) update ${arg#*=} ;;
 *) printf "Unrecognized option %s\n" "$arg" ;;
 esac
 done
