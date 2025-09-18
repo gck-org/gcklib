@@ -19,7 +19,6 @@ Usage: $prog_name [OPTION]...
       --import   import named module into current package.
       --update   update packages in your current gcklib.
       --remove   remove a package from current package.
-
 EOF
 }
 
