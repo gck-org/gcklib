@@ -18,7 +18,7 @@ Usage: $prog_name [OPTION]...
       --list     print avaliable modules.
       --import   import named module into current package.
       --update   update packages in your current gcklib.
-	  --remove   remove a package from current package.
+      --remove   remove a package from current package.
 
 EOF
 }
