@@ -2,7 +2,6 @@ GCK gcklib - TODO
 
 Todo:
 
-  * Create 'gcklib-tool' than add lib to project
-  * Public header for yait
+  * Add library functions
 
 end of file TODO

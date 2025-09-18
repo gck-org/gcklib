@@ -1,0 +1,71 @@
+#!/bin/sh
+
+prog_name=$0
+version="beta"
+year=2025
+
+fatal() {
+	echo "fatal: $*" >&2
+	exit 1
+}
+
+usage() {
+cat <<EOF
+Usage: $prog_name [OPTION]... [module-name]...
+
+      --help     print this help and exit.
+      --version  print version information.
+
+EOF
+exit 0
+}
+
+version() {
+cat <<EOF
+$prog_name $version $(git rev-list --count --all)
+Copyright (C) $year GCK.
+This is free software: you are free to change and redistribute it.
+There is NO WARRNTY, to the extent permitted by law.
+EOF
+exit 0
+}
+
+create_module() {
+local mod=$1
+cat <<EOF > lib/$mod.c
+/* Copyright (C) GCK
+ *
+ * This file is part of gcklib
+ *
+ * This project and file is licensed under the BSD-3-Clause licence.
+ * <https://opensource.org/licence/bsd-3-clause>
+ */
+
+ #include "$mod.h"
+EOF
+
+cat <<EOF > lib/$mod.h
+/* Copyright (C) GCK
+ *
+ * This file is part of gcklib
+ *
+ * This project and file is licensed under the BSD-3-Clause licence.
+ * <https://opensource.org/licence/bsd-3-clause>
+ */
+
+#ifndef ${mod}_H
+#define ${mod}_H
+#endif
+EOF
+}
+
+[ ! -d "./lib" ] && fatal run this in the gcklib directory.
+
+for arg; do
+case "$arg" in
+--help) usage ;;
+--version) version ;;
+-*) printf "Unrecognized option %s\n" "$arg" ;;
+*) create_module "$arg" ;;
+esac
+done
