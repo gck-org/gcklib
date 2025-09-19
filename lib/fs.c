@@ -18,44 +18,35 @@
 
 char *fs_read(const char *path)
 {
-	FILE *f;
-	long size;
-	char *buf;
-
-	f = fopen(path, "rb");
-	if (!f)
+	FILE *fptr = fopen(path, "r");
+	if (!fptr)
 		return NULL;
 
-	if (fseek(f, 0, SEEK_END) != 0) {
-		fclose(f);
-		return NULL;
-	}
-
-	size = ftell(f);
-	if (size < 0) {
-		fclose(f);
-		return NULL;
-	}
-
-	if (fseek(f, 0, SEEK_SET) != 0) {
-		fclose(f);
-		return NULL;
-	}
-
-	buf = malloc(size + 1);
+	size_t cap = 1024;
+	size_t len = 0;
+	char *buf = malloc(cap);
 	if (!buf) {
-		fclose(f);
+		fclose(fptr);
 		return NULL;
 	}
 
-	if (fread(buf, 1, size, f) != (size_t)size) {
-		free(buf);
-		fclose(f);
-		return NULL;
+	int c;
+	while ((c = fgetc(fptr)) != EOF) {
+		if (len + 1 >= cap) {
+			cap *= 2;
+			char *tmp = realloc(buf, cap);
+			if (!tmp) {
+				free(buf);
+				fclose(fptr);
+				return NULL;
+			}
+			buf = tmp;
+		}
+		buf[len++] = (char)c;
 	}
+	buf[len] = '\0';
 
-	buf[size] = '\0';
-	fclose(f);
+	fclose(fptr);
 	return buf;
 }
 
@@ -76,29 +67,29 @@ bool fs_exists(const char *path)
 
 int fs_append(const char *path, const char *format, ...)
 {
-	FILE *fptr;
-	va_list args;
-	va_start(args, format);
+	FILE *fp = fopen(path, "a");
+	if (!fp)
+		return -1;
 
-	if (vfprintf(fptr, format, args) < 0) {
-		va_end(args);
-		fclose(fptr);
+	va_list ap;
+	va_start(ap, format);
+	int ret = vfprintf(fp, format, ap);
+	va_end(ap);
+
+	if (ret < 0) {
+		fclose(fp);
 		return -1;
 	}
 
-	va_end(args);
+	if (fclose(fp) != 0)
+		return -1;
 
-	fptr = fopen(path, "a");
-
-	return 0;
+	return ret;
 }
 
 int fs_del(const char *path)
 {
-	if (!remove(path)) {
-		return -1;
-	}
-	return 0;
+	return remove(path);
 }
 
 int fs_new(const char *path)
@@ -132,23 +123,24 @@ int fs_new(const char *path)
 
 int fs_write(const char *path, const char *format, ...)
 {
-	FILE *fptr;
-	va_list args;
-	va_start(args, format);
+	FILE *fptr = fopen(path, "w");
+	if (!fptr)
+		return -1;
 
-	fptr = fopen(path, "w");
-	if (!fptr) {
-		return errno;
-	}
+	va_list ap;
+	va_start(ap, format);
+	int ret = vfprintf(fptr, format, ap);
+	va_end(ap);
 
-	if (vfprintf(fptr, format, args) < 0) {
-		va_end(args);
+	if (ret < 0) {
 		fclose(fptr);
 		return -1;
 	}
-	va_end(args);
 
-	return 0;
+	if (fclose(fptr) != 0)
+		return -1;
+
+	return ret;
 }
 
 FILE *fs_temp()

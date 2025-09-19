@@ -1,14 +1,21 @@
 CC = gcc
-CLFAGS = -Wall -Wextra -std=c23 -I../../lib
+CFLAGS = -Wall -Wextra -I../../lib -g --std=c23
+LDLIBS =
 
-TEST = fs_test
-SRCS = $(wildcard .)
-OBJS = $(SRC:.c=.o)
+LIBSRC = ../../lib/fs.c ../../lib/str_dup.c
+LIBOBJ = $(LIBSRC:.c=.o)
 
-all: $(TEST) 
-	$(CC) $(CFLAGS) -o $@ $^
+TESTSRC = fs_test.c
+TESTOBJ = $(TESTSRC:.c=.o)
+
+TARGET = fs_test
+
+all: $(TARGET)
+
+$(TARGET): $(TESTOBJ) $(LIBOBJ)
+	$(CC) $(CFLAGS) -o $@ $^ $(LDLIBS)
 
 clean:
-	$(RM) $(OBJS) $(TEST)
+	rm -f $(TARGET) $(TESTOBJ) $(LIBOBJ)
 
 .PHONY: all clean
