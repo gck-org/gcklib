@@ -1,80 +1,115 @@
 #!/bin/sh
 
-prog_name=$0
-version="beta"
+# Usage: $0 [OPTIONS]... [modules]...
+
+prog_name=$(basename "$0")
+tool_version="beta"
 year=2025
 
+lib="lib"
+gcklib="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)/lib"
+
 fatal() {
-	echo "fatal: $*" >&2
-	exit 1
+    echo "fatal: $*" >&2
+    exit 1
 }
 
 usage() {
-	cat <<EOF
+    cat <<EOF
 Usage: $prog_name [OPTION]...
 
       --help     print this help and exit.
       --version  print version information.
-      --list     print avaliable modules.
+      --list     print available modules.
       --import   import named module into current package.
       --update   update packages in your current gcklib.
       --remove   remove a package from current package.
 EOF
 }
 
-version() {
-	cat <<EOF
-$prog_name $version $(git rev-list --count --all)
+print_version() {
+    cat <<EOF
+$prog_name $tool_version $(git rev-list --count --all 2>/dev/null || echo 0)
 Copyright (C) $year GCK.
 This is free software: you are free to change and redistribute it.
-There is NO WARRNTY, to the extent permitted by law.
+There is NO WARRANTY, to the extent permitted by law.
 EOF
 }
 
 list() {
-	ls lib | grep ".c" | cut -d. -f1
+    ls lib/*.c 2>/dev/null | sed 's|.*/||; s|\.c$||'
 }
 
 import() {
-	local module=$1
-	module=$($module | xargs)
-	cp lib/${module}.h ../lib/
-	cp lib/${nodule}.c ../lib/
+    module=$(echo "$1" | xargs)
+    [ -z "$module" ] && fatal "no module given to import"
+    cp "$gcklib/${module}.h" "../$lib/" 2>/dev/null || fatal "missing header for $module"
+    cp "$gcklib/${module}.c" "../$lib/" 2>/dev/null || fatal "missing source for $module"
 }
 
 remove() {
-	local module=$1
-	module=$($module | xargs)
-	rm ../lib/${module}.h ../lib/${module}.c
+    module=$(echo "$1" | xargs)
+    [ -z "$module" ] && fatal "no module given to remove"
+    rm -f "../$lib/${module}.h" "../$lib/${module}.c"
 }
 
 update() {
-	local module=$1
-	module=$($module | xargs)
+    if [ $# -eq 0 ]; then
+        for f in lib/*.c; do
+            m=$(basename "$f" .c)
+            update "$m"
+        done
+        return
+    fi
 
-	if [ $# -eq 0 ]; then
-		for f in lib/*; do
-			update $f
-		done
-	else
-		if [ stat -c "%Y" ../lib/${module}.c -lt stat -c "%Y" lib/${module}.c ]; then
-			cp lib/${module}.c ../lib/{module}.c
-		fi
-		if [ stat -c "%Y" ../lib/${module}.h -lt stat -c "%Y" lib/${module}.h ]; then
-			cp lib/${module}.h ../lib/{module}.h
-		fi
-	fi
+    module=$(echo "$1" | xargs)
+
+    for ext in c h; do
+        src="lib/${module}.${ext}"
+        dst="../lib/${module}.${ext}"
+        if [ -f "$src" ]; then
+            if [ ! -f "$dst" ] || [ "$(stat -c %Y "$src")" -gt "$(stat -c %Y "$dst")" ]; then
+                cp "$src" "$dst"
+            fi
+        fi
+    done
 }
 
-[ ! -f "./gcklib-tool" ] && fatal run this in the gcklib directory.
+[ ! -f "./src" ] && fatal "run this in the parent package directory"
 
-for arg; do
-case "$arg" in
---help) usage ;;
---version) version ;;
---list) list ;;
---import*) import ${arg#*=} ;;
---update*) update ${arg#*=} ;;
-*) printf "Unrecognized option %s\n" "$arg" ;;
-esac
+while [ $# -gt 0 ]
+do
+    case "$1" in
+        --help) usage ;;
+        --version) print_version ;;
+        --list) list ;;
+        --import=*)
+            import "${1#--import=}"
+            ;;
+        --import)
+            shift
+            [ $# -gt 0 ] || { echo "missing argument for --import" >&2; exit 1; }
+            import "$1"
+            ;;
+        --remove=*)
+            remove "${1#--remove=}"
+            ;;
+        --remove)
+            shift
+            [ $# -gt 0 ] || { echo "missing argument for --remove" >&2; exit 1; }
+            remove "$1"
+            ;;
+        --update=*)
+            update "${1#--update=}"
+            ;;
+        --update)
+            shift
+            [ $# -gt 0 ] || { update; continue; }
+            update "$1"
+            ;;
+        *)
+            printf 'Unrecognized option %s\n' "$1" >&2
+            ;;
+    esac
+    shift
 done
