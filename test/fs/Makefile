@@ -1,13 +1,14 @@
-LIBFILES := $(wildcard ../lib/*)
+CC = gcc
+CLFAGS = -Wall -Wextra -std=c23 -I../../lib
 
-.POSIX:
-CC ::= gcc
-CFLAGS ::= -Wall -Wextra --std=c23
+TEST = fs_test
+SRCS = $(wildcard .)
+OBJS = $(SRC:.c=.o)
 
-all: fs_test
-
-fs_test:
-	$(CC) $(CFLAGS) -I../lib $(LIBFILES) fs_test.c -o fs_test
+all: $(TEST) 
+	$(CC) $(CFLAGS) -o $@ $^
 
 clean:
-	$(RM) fs
+	$(RM) $(OBJS) $(TEST)
+
+.PHONY: all clean
