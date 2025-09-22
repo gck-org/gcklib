@@ -7,5 +7,6 @@ Todo:
   * print: printfn, println, 
   * check: check_email, check_website, check_alpha, check_alphanumeric
   * xmem: make (macros that creates buffer of size N)
+  * Flags
 
 end of file TODO
