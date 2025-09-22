@@ -4,6 +4,7 @@ Todo:
 
   * Network Utilites
   * fs: Write file with content
-  * print: printfn, println, format?
+  * print: printfn, println, 
+  * data|strucutre: vector, hash table
 
 end of file TODO
