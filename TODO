@@ -2,9 +2,10 @@ GCK gcklib - TODO
 
 Todo:
 
-  * Network Utilites
+  * net: ping, pull, IPv4 type (union)
   * fs: Write file with content
   * print: printfn, println, 
-  * data|strucutre: vector, hash table
+  * check: check_email, check_website, check_alpha, check_alphanumeric
+  * xmem: make (macros that creates buffer of size N)
 
 end of file TODO
