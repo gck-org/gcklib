@@ -2,6 +2,8 @@ GCK gcklib - TODO
 
 Todo:
 
-  * Add library functions
+  * Network Utilites
+  * fs: Write file with content
+  * print: printfn, println, format?
 
 end of file TODO
