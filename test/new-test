@@ -1,0 +1,79 @@
+#!/bin/sh
+
+prog_name=$0
+version="beta"
+year=2025
+
+fatal() {
+	echo "fatal: $*" >&2
+	exit 1
+}
+
+usage() {
+cat <<EOF
+Usage: $prog_name [OPTION]... [module-name]...
+
+      --help     print this help and exit.
+      --version  print version information.
+
+EOF
+exit 0
+}
+
+version() {
+cat <<EOF
+$prog_name $version $(git rev-list --count --all)
+Copyright (C) $year GCK.
+This is free software: you are free to change and redistribute it.
+There is NO WARRNTY, to the extent permitted by law.
+EOF
+exit 0
+}
+
+create_test() {
+local test=$1
+
+mkdir $test
+
+cat << EOF > $test/Makefile
+TESTEE = $test
+MODDEPS = $test
+
+CC = gcc
+CFLAGS = -Wall -Wextra -I../../lib -g --std=c23
+_MODDEPS = \$(addprefix ../../lib/,\$(addsuffix .c,\$(MODDEPS)))
+
+all: \$(TESTEE)
+
+\$(TESTEE): \$(TESTEE)_test.c \$(_MODDEPS)
+	\$(CC) \$(CFLAGS) \$(_MODDEPS) \$(TESTEE)_test.c -o \$(TESTEE)
+
+clean:
+	rm -f \$(TESTEE)
+
+.PHONY: all clean
+EOF
+
+cat <<EOF > "$test/${test}_test.c"
+#include <stdio.h>
+
+#include "../../lib/$test.h"
+
+int main(int argc, char **argv)
+{
+	puts("all $test passed");
+	return 0;
+}
+EOF
+}
+
+[ "$(basename "$(pwd)")" = test ] || fatal run this is the test director.
+
+for arg; do
+case "$arg" in
+--help) usage ;;
+--version) version ;;
+-*) printf "Unrecognized option %s\n" "$arg" ;;
+*) create_test "$arg" ;;
+esac
+done

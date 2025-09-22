@@ -41,7 +41,7 @@ cat <<EOF > lib/$mod.c
  * <https://opensource.org/licence/bsd-3-clause>
  */
 
- #include "$mod.h"
+#include "$mod.h"
 EOF
 
 cat <<EOF > lib/$mod.h

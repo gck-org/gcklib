@@ -1,5 +1,5 @@
-TESTEE = fs
-MODDEPS = fs
+TESTEE = str_dup
+MODDEPS = str_dup
 
 CC = gcc
 CFLAGS = -Wall -Wextra -I../../lib -g --std=c23

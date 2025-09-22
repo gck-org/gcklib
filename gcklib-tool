@@ -75,7 +75,7 @@ update() {
     done
 }
 
-[ ! -f "./src" ] && fatal "run this in the parent package directory"
+[ ! -f "./lib" ] || fatal "run this in the parent package directory"
 
 while [ $# -gt 0 ]
 do
