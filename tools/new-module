@@ -53,9 +53,13 @@ cat <<EOF > lib/$mod.h
  * <https://opensource.org/licence/bsd-3-clause>
  */
 
-#ifndef ${mod}_H
-#define ${mod}_H
+#ifndef $(echo "$mod" | tr '[:lower:]' '[:upper:]')_H
+#define $(echo "$mod" | tr '[:lower:]' '[:upper:]')_H
 #endif
+EOF
+
+cat <<EOF > modules/$mod
+$mod
 EOF
 }
 

@@ -1,7 +1,5 @@
 #!/bin/sh
 
-# Usage: $0 [OPTIONS]... [modules]...
-
 prog_name=$(basename "$0")
 tool_version="beta"
 year=2025
@@ -18,12 +16,12 @@ usage() {
     cat <<EOF
 Usage: $prog_name [OPTION]...
 
-      --help     print this help and exit.
-      --version  print version information.
-      --list     print available modules.
-      --import   import named module into current package.
-      --update   update packages in your current gcklib.
-      --remove   remove a package from current package.
+      --help       print this help and exit.
+      --version    print version information.
+      --list       print available modules.
+      --import     import named module into current package.
+      --update     update packages in your current gcklib.
+      --remove     remove a package from current package.
 EOF
 }
 
@@ -37,14 +35,43 @@ EOF
 }
 
 list() {
-    ls lib/*.c 2>/dev/null | sed 's|.*/||; s|\.c$||'
+    ls -1 "modules/"
+}
+
+visited=""
+
+visit() {
+    module=$1
+    case " $visited " in
+        *" $module "*) return ;;
+    esac
+    visited="$visited $module"
+
+    dep_file="modules/$module"
+    if [ -f "$dep_file" ]; then
+        while IFS= read -r entry; do
+            entry=$(echo "$entry" | xargs)
+            [ -n "$entry" ] && visit "$entry"
+        done < "$dep_file"
+    fi
 }
 
 import() {
     module=$(echo "$1" | xargs)
     [ -z "$module" ] && fatal "no module given to import"
-    cp "$gcklib/${module}.h" "../$lib/" 2>/dev/null || fatal "missing header for $module"
-    cp "$gcklib/${module}.c" "../$lib/" 2>/dev/null || fatal "missing source for $module"
+
+    visited=""
+    visit "$module"
+    set -- $visited
+
+    for mod in "$@"; do
+        for ext in h c; do
+            src="$gcklib/${mod}.${ext}"
+            dst="../$lib/${mod}.${ext}"
+            [ -f "$src" ] || fatal "missing $ext for $mod"
+            cp "$src" "$dst"
+        done
+    done
 }
 
 remove() {
@@ -63,7 +90,6 @@ update() {
     fi
 
     module=$(echo "$1" | xargs)
-
     for ext in c h; do
         src="lib/${module}.${ext}"
         dst="../lib/${module}.${ext}"
@@ -77,38 +103,31 @@ update() {
 
 [ ! -f "./lib" ] || fatal "run this in the parent package directory"
 
-while [ $# -gt 0 ]
-do
+while [ $# -gt 0 ]; do
     case "$1" in
-        --help) usage ;;
-        --version) print_version ;;
-        --list) list ;;
-        --import=*)
-            import "${1#--import=}"
-            ;;
+        --help) usage; exit 0 ;;
+        --version) print_version; exit 0 ;;
+        --list) list; exit 0 ;;
+        --import=*) import "${1#--import=}" ;;
         --import)
             shift
-            [ $# -gt 0 ] || { echo "missing argument for --import" >&2; exit 1; }
+            [ $# -gt 0 ] || fatal "missing argument for --import"
             import "$1"
             ;;
-        --remove=*)
-            remove "${1#--remove=}"
-            ;;
+        --remove=*) remove "${1#--remove=}" ;;
         --remove)
             shift
-            [ $# -gt 0 ] || { echo "missing argument for --remove" >&2; exit 1; }
+            [ $# -gt 0 ] || fatal "missing argument for --remove"
             remove "$1"
             ;;
-        --update=*)
-            update "${1#--update=}"
-            ;;
+        --update=*) update "${1#--update=}" ;;
         --update)
             shift
-            [ $# -gt 0 ] || { update; continue; }
+            [ $# -gt 0 ] || { update; shift; continue; }
             update "$1"
             ;;
         *)
-            printf 'Unrecognized option %s\n' "$1" >&2
+            fatal "unrecognized option $1"
             ;;
     esac
     shift

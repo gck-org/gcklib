@@ -13,5 +13,6 @@ run() {
 [ -d "./tools" ] || fatal "must be run from parent directory"
 
 run sh ./tools/format
+run find test -type d -exec sh -c 'cd "{}" && [ -f Makefile ] && make clean' \;
 
 echo "done."
