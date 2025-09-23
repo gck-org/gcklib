@@ -3,5 +3,6 @@ GCK gcklib - TODO
 Todo:
 
   * conf: read config files
+  * err: hint
 
 end of file TODO
