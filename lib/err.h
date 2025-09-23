@@ -13,11 +13,13 @@ void errorf(const char *format, ...);
 void fatalf(const char *format, ...);
 void notef(const char *format, ...);
 void warnf(const char *format, ...);
+void hintf(const char *format, ...);
 
 void errorfc(const char *format, ...);
 void fatalfc(const char *format, ...);
 void notefc(const char *format, ...);
 void warnfc(const char *format, ...);
+void hintfc(const char *format, ...);
 
 void error(int code);
 

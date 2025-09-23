@@ -8,10 +8,12 @@ int main(int argc, char **argv)
 	errorf("errorf: %s", "success");
 	notef("notef: %s", "success");
 	warnf("warnf: %s", "success");
+	hintf("hintf: %s", "success");
 
 	errorfc("errorfc: %s", "success");
 	notefc("notefc: %s", "success");
 	warnfc("warnfc: %s", "success");
+	hintfc("hintfc: %s", "success");
 
 	if (argc < 2) {
 		fatalf("not enough arguments: got %d", argc);
