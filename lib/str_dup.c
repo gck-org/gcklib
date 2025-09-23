@@ -10,7 +10,5 @@ char *str_dup(char *s)
 	if (!new)
 		return NULL;
 	strcpy(new, s);
-	for (int i = 0; !new[i]; ++i)
-		new[i] = toupper((unsigned char)new[i]);
 	return new;
 }
