@@ -9,6 +9,18 @@
 #ifndef err_H
 #define err_H
 
+#include <stdlib.h>
+#include <string.h>
+
+extern bool __allow_color;
+
+#define err_init \
+  do { \
+    bool color = getenv("NOCOLOR") ? true : false;
+    bool dumb = strcmp(getenv("TERM"), "dumb") ? false : true;
+    __allow_color = (color || dumb);
+  } while (0)
+
 void errorf(const char *format, ...);
 void fatalf(const char *format, ...);
 void notef(const char *format, ...);
