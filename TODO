@@ -2,7 +2,7 @@ GCK gcklib - TODO
 
 Todo:
 
-  * vector: vec_init, vec_free, vec_get, vec_set, vec_push, vec_pop, vec_len, vec_cap, vec_clear
+  * vector
   * conf: conf_parse, conf_set_default
 
 end of file TODO
