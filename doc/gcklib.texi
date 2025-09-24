@@ -26,13 +26,49 @@ This document overview GCKLIB
 
 @detailmenu
 
+Overview
+* Description:: What is gcklib
+* Quickstart:: How to add a module
+
 @end detailmenu
 @end menu
 
 @node Overview
 @chapter Overview
 
+@node Description
+@section Description
+
 Gcklib is a gnulib-like C utilied library for the GCK suite of packages distribtuions
 and software. 
+
+@node Quickstart
+@section Quickstart
+
+This section detials how to install and use gcklib. Gcklib comes with the gcklib-tool, which can import, remove, and update
+modules added to a package. For more detailed information about any of the gcklib-tool functions see the dedication section(s).
+
+@subsection Install
+
+Gcklib is installed by adding it as a submodule. This is accivhed through @command{git submodule add https://github.com/gck-org/gcklib} on systems with the binary installed. It is important to note that if you want to contribute to a project that used gcklib, and want use a new module, you have to
+clone the recursivly with the @command{git clone --recursive https://github.com/gck-org/gcklib}.
+
+@subseciton gcklib-tool
+
+@command{gcklib-tool} is a helpful sh scipt used to import, remove, and update modules added to a package. If you want to use @command{gcklib-tool}
+you must first @command{cd} into the root of the gcklib directory.
+
+@subsubsection @b{import}: @command{./gcklib-tool --import module}: imports the named module into the current package.
+
+The import flag adds the named module to the current package. The named module is the valid name of a module after the --import invoke.
+
+@subsubsection @b{remove}: @command{./gcklib-tool --remove module}: removes the named module from the current package.
+
+The remove flag removes the named module from the current package. The named module is the valid name of a module after the --remove invoke.
+
+@subsubsection @b{update}: @command{./gcklib-tool --update [module]}: updates all or specified modules in the current package.
+
+The update flag either updates all the modules in current package or updated the optional sepcified one. The optional module is the valid name of a
+module after --update invoke.
 
 @bye
