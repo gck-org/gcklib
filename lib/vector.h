@@ -22,9 +22,9 @@ vec_t vec_init(size_t esz);
 void vec_free(vec_t *v);
 
 void *vec_get(vec_t *v, size_t i);
-void vec_set(vec_t *v, size_t i, void *elem);
+int vec_set(vec_t *v, size_t i, void *elem);
 
-int vec_append(vec_t *v, size_t i, void *elem);
-int vec_remove(vec_t *v, size_t i);
+int vec_append(vec_t *v, void *elem);
+int vec_remove(vec_t *v);
 
 #endif

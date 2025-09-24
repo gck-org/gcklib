@@ -6,9 +6,7 @@
  * <https://opensource.org/licenses/BSD-3-Clause>
  */
 
-#include <string.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <stdarg.h>
 
 #include "err.h"
@@ -19,13 +17,21 @@
 #define NOTE "\e[1;94m"
 #define HINT "\e[38;5;166m"
 
+bool __allow_color = false;
+
 void errorf(const char *format, ...)
 {
 	va_list args;
 	va_start(args, format);
+
+#ifdef NOCOLOR
 	fputs("error: ", stderr);
+#else
+	fprintf(stderr, "%serror%s: ", ERROR, RESET);
+#endif
 	vfprintf(stderr, format, args);
 	fputc('\n', stderr);
+
 	va_end(args);
 }
 
@@ -33,30 +39,49 @@ void fatalf(const char *format, ...)
 {
 	va_list args;
 	va_start(args, format);
-	fputs("fatal: ", stderr);
-	vfprintf(stderr, format, args);
-	fputc('\n', stderr);
-	va_end(args);
-	exit(EXIT_FAILURE);
-}
 
-void notef(const char *format, ...)
-{
-	va_list args;
-	va_start(args, format);
-	fputs("note: ", stderr);
+#ifdef NOCOLOR
+	fputs("error: ", stderr);
+#else
+	fprintf(stderr, "%serror%s: ", ERROR, RESET);
+#endif
 	vfprintf(stderr, format, args);
 	fputc('\n', stderr);
+
 	va_end(args);
+
+	exit(EXIT_FAILURE);
 }
 
 void warnf(const char *format, ...)
 {
 	va_list args;
 	va_start(args, format);
-	fputs("warning: ", stderr);
+
+#ifdef NOCOLOR
+	fputs("warn: ", stderr);
+#else
+	fprintf(stderr, "%swarn%s: ", WARN, RESET);
+#endif
 	vfprintf(stderr, format, args);
 	fputc('\n', stderr);
+
+	va_end(args);
+}
+
+void notef(const char *format, ...)
+{
+	va_list args;
+	va_start(args, format);
+
+#ifdef NOCOLOR
+	fputs("note: ", stderr);
+#else
+	fprintf(stderr, "%snote%s: ", NOTE, RESET);
+#endif
+	vfprintf(stderr, format, args);
+	fputc('\n', stderr);
+
 	va_end(args);
 }
 
@@ -64,134 +89,39 @@ void hintf(const char *format, ...)
 {
 	va_list args;
 	va_start(args, format);
+
+#ifdef NOCOLOR
 	fputs("hint: ", stderr);
+#else
+	fprintf(stderr, "%shint%s: ", HINT, RESET);
+#endif
 	vfprintf(stderr, format, args);
 	fputc('\n', stderr);
+
 	va_end(args);
 }
 
-void errorfc(const char *format, ...)
-{
-	va_list args;
-	va_start(args, format);
-	fprintf(stderr, "%serror%s: ", ERROR, RESET);
-	vfprintf(stderr, format, args);
-	fputc('\n', stderr);
-	va_end(args);
-}
-
-void fatalfc(const char *format, ...)
-{
-	va_list args;
-	va_start(args, format);
-	fprintf(stderr, "%sfatal%s: ", ERROR, RESET);
-	vfprintf(stderr, format, args);
-	fputc('\n', stderr);
-	va_end(args);
-	exit(EXIT_FAILURE);
-}
-
-void notefc(const char *format, ...)
-{
-	va_list args;
-	va_start(args, format);
-	fprintf(stderr, "%snote%s: ", NOTE, RESET);
-	vfprintf(stderr, format, args);
-	fputc('\n', stderr);
-	va_end(args);
-}
-
-void warnfc(const char *format, ...)
-{
-	va_list args;
-	va_start(args, format);
-	fprintf(stderr, "%swarning%s: ", WARN, RESET);
-	vfprintf(stderr, format, args);
-	fputc('\n', stderr);
-	va_end(args);
-}
-
-void hintfc(const char *format, ...)
-{
-	va_list args;
-	va_start(args, format);
-	fprintf(stderr, "%shint: ", HINT);
-	vfprintf(stderr, format, args);
-	fprintf(stderr, "\n%s", RESET);
-	va_end(args);
-}
-
-void errorfm(const char *format, ...)
-{
-	va_list args;
-	va_start(args, format);
-
-	if (__allow_color) {
-		errorfc(format, args);
-	} else {
-		errorf(format, args);
-	}
-	
-	va_end(args);
-}
-
-void fatalfm(const char *format, ...)
-{
-	va_list args;
-	va_start(args, format);
-
-	if (__allow_color) {
-		fatalfc(format, args);
-	} else {
-		fatalf(format, args);
-	}
-	
-	va_end(args);
-}
-
-void notefm(const char *format, ...)
-{
-	va_list args;
-	va_start(args, format);
-
-	if (__allow_color) {
-		notefc(format, args);
-	} else {
-		notef(format, args);
-	}
-	
-	va_end(args);
-}
-
-void warnfm(const char *format, ...)
-{
-	va_list args;
-	va_start(args, format);
-
-	if (__allow_color) {
-		warnfc(format, args);
-	} else {
-		warnf(format, args);
-	}
-	
-	va_end(args);
-}
-
-void hintfm(const char *format, ...)
-{
-	va_list args;
-	va_start(args, format);
-
-	if (__allow_color) {
-		hintf(format, args);
-	} else {
-		hintfc(format, args);
-	}
-	
-	va_end(args);
-}
-
-void error(int code)
+void errorfa(int code)
 {
 	errorf(strerror(code));
+}
+
+void fatalfa(int code)
+{
+	fatalf(strerror(code));
+}
+
+void notefa(int code)
+{
+	notef(strerror(code));
+}
+
+void warnfa(int code)
+{
+	warnf(strerror(code));
+}
+
+void hintfa(int code)
+{
+	hintf(strerror(code));
 }

@@ -7,26 +7,26 @@
  */
 
 #include <string.h>
-#include "err.h"
 
 #include "vector.h"
 
 vec_t vec_init(size_t esz)
 {
-	vec_t v = { 0 };
+	vec_t v;
+	v.data = NULL;
+	v.len = 0;
+	v.cap = 0;
 	v.esz = esz;
 	return v;
 }
 
 void vec_free(vec_t *v)
 {
-	if (!v)
-		return;
-
 	free(v->data);
 	v->data = NULL;
 	v->len = 0;
 	v->cap = 0;
+	v->esz = 0;
 }
 
 void *vec_get(vec_t *v, size_t i)
@@ -36,26 +36,33 @@ void *vec_get(vec_t *v, size_t i)
 	return (char *)v->data + i * v->esz;
 }
 
-void vec_set(vec_t *v, size_t i, void *elem)
+int vec_set(vec_t *v, size_t i, void *elem)
 {
-	if (i >= v->len) {
-		fatalf("out of bounds: index %d out of %d", i, v->len);
-	}
+	if (i >= v->len)
+		return -1;
 	memcpy((char *)v->data + i * v->esz, elem, v->esz);
+	return 0;
 }
 
-int vec_push(vec_t *v, void *elem)
+int vec_append(vec_t *v, void *elem)
 {
+	if (v->len == v->cap) {
+		size_t newcap = v->cap ? v->cap * 2 : 4;
+		void *newdata = realloc(v->data, newcap * v->esz);
+		if (!newdata)
+			return -1;
+		v->data = newdata;
+		v->cap = newcap;
+	}
+	memcpy((char *)v->data + v->len * v->esz, elem, v->esz);
+	v->len++;
+	return 0;
 }
 
-int vec_pop(vec_t *v, void *out)
+int vec_remove(vec_t *v)
 {
-}
-
-int vec_append(vec_t *v, size_t i, void *elem)
-{
-}
-
-int vec_remove(vec_t *v, size_t i)
-{
+	if (v->len == 0)
+		return -1;
+	v->len--;
+	return 0;
 }
