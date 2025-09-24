@@ -121,6 +121,76 @@ void hintfc(const char *format, ...)
 	va_end(args);
 }
 
+void errorfm(const char *format, ...)
+{
+	va_list args;
+	va_start(args, format);
+
+	if (__allow_color) {
+		errorfc(format, args);
+	} else {
+		errorf(format, args);
+	}
+	
+	va_end(args);
+}
+
+void fatalfm(const char *format, ...)
+{
+	va_list args;
+	va_start(args, format);
+
+	if (__allow_color) {
+		fatalfc(format, args);
+	} else {
+		fatalf(format, args);
+	}
+	
+	va_end(args);
+}
+
+void notefm(const char *format, ...)
+{
+	va_list args;
+	va_start(args, format);
+
+	if (__allow_color) {
+		notefc(format, args);
+	} else {
+		notef(format, args);
+	}
+	
+	va_end(args);
+}
+
+void warnfm(const char *format, ...)
+{
+	va_list args;
+	va_start(args, format);
+
+	if (__allow_color) {
+		warnfc(format, args);
+	} else {
+		warnf(format, args);
+	}
+	
+	va_end(args);
+}
+
+void hintfm(const char *format, ...)
+{
+	va_list args;
+	va_start(args, format);
+
+	if (__allow_color) {
+		hintf(format, args);
+	} else {
+		hintfc(format, args);
+	}
+	
+	va_end(args);
+}
+
 void error(int code)
 {
 	errorf(strerror(code));
