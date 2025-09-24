@@ -1,12 +1,17 @@
+\input texinfo
+@setfilename gcklib.info
 @include version.texi
+@settile GCKLIB @value{VERSION}
 
 @copying
-Copyright @copyright{} 2025 GCK
+This manual is for Hello (version @value{VERSION}, @value{UPDATED}),
+a utility library.
 
-@quotation
+Copyright (C) GCK
+
 Permission is granted to copy, distribute and/or modify this document
-under the terms of the BSD-3-clause licence.
-@end quotation
+under the terms of the BSD 3-Clause License.
+<https://opensource.org/license/bsd-3-clause>
 @end copying
 
 @contents
@@ -28,6 +33,6 @@ This document overview GCKLIB
 @chapter Overview
 
 Gcklib is a gnulib-like C utilied library for the GCK suite of packages distribtuions
-and software.
+and software. 
 
 @bye
