@@ -21,6 +21,12 @@ void notefc(const char *format, ...);
 void warnfc(const char *format, ...);
 void hintfc(const char *format, ...);
 
+void errorfm(const char *format, ...);
+void fatalfm(const char *format, ...);
+void notefm(const char *format, ...);
+void warnfm(const char *format, ...);
+void hintfm(const char *format, ...);
+
 void error(int code);
 
 #endif
