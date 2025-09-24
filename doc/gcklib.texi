@@ -19,4 +19,15 @@ This document overview GCKLIB
 @menu
 * Overview:: Use cases for gcklib
 
+@detailmenu
+
+@end detailmenu
+@end menu
+
+@node Overview
+@chapter Overview
+
+Gcklib is a gnulib-like C utilied library for the GCK suite of packages distribtuions
+and software.
+
 @bye
