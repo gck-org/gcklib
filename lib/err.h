@@ -16,9 +16,9 @@ extern bool __allow_color;
 
 #define err_init \
   do { \
-    bool color = getenv("NOCOLOR") ? true : false;
+    bool nocolor = getenv("NOCOLOR") ? true : false;
     bool dumb = strcmp(getenv("TERM"), "dumb") ? false : true;
-    __allow_color = (color || dumb);
+    __allow_color = (nocolor || dumb);
   } while (0)
 
 void errorf(const char *format, ...);
