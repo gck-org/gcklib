@@ -107,43 +107,43 @@ This section describes selected variables, functions, and macros
 exported by GCKLIB.
 
 @deftypefn {Function} void errorf (const char* format, ...)
-Prints an error message.
+This function prints out an error message. By default, it uses color but that can be turned off by defining NOCOLOR, and automatically on systems that don't support it.
 @end deftypefn
 
 @deftypefn {Function} void fatalf (const char*format, ...)
-Prints an error message and exits.
+This function prints out an error message and exits. By default, it uses color but that can be turned off by defining NOCOLOR, and automatically on systems that don't support it.
 @end deftypefn
 
 @deftypefn {Function} void notef (const char* format, ...)
-Prints a note.
+This function prints out a note. By default, it uses color but that can be turned off by defining NOCOLOR, and automatically on systems that don't support it.
 @end deftypefn
 
 @deftypefn {Function} void warnf (const char* format, ...)
-Prints a warning
+This function prints out a warning. By default, it uses color but that can be turned off by defining NOCOLOR, and automatically on systems that don't support it.
 @end deftypefn
 
 @deftypefn {Function} void hintf (const char* format, ...)
-Prints a hint.
+This function prints out a hint. By default, it uses color but that can be turned off by defining NOCOLOR, and automatically on systems that don't support it.
 @end deftypefn
 
 @deftypefn {Function} void errorfa (int code)
-Prints an error message based on the strerror of code.
+This function prints out a message based on the error code passed. By default, it uses color but that can be turned off by defining NOCOLOR, and automatically on systems that don't support it.
 @end deftypefn
 
 @deftypefn {Function} void fatalfa (int code)
-Prints an error message based on the strerror of code, then exits.
+This function prints out a message based on the error code passed. By default, it uses color but that can be turned off by defining NOCOLOR, and automatically on systems that don't support it.
 @end deftypefn
 
 @deftypefn {Function} void notefa (int code)
-Prints a note message based on the strerror of code.
+This function prints out a message based on the error code passed. By default, it uses color but that can be turned off by defining NOCOLOR, and automatically on systems that don't support it.
 @end deftypefn
 
 @deftypefn {Function} void warnfa (int code)
-Prints a warning message based on the strerror of code.
+This function prints out a message based on the error code passed. By default, it uses color but that can be turned off by defining NOCOLOR, and automatically on systems that don't support it.
 @end deftypefn
 
 @deftypefn {Function} void hintfa (int code)
-Prints a hint message based on the strerror of code.
+This function prints out a message based on the error code passed. By default, it uses color but that can be turned off by defining NOCOLOR, and automatically on systems that don't support it.
 @end deftypefn
 
 @bye
