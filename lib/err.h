@@ -12,15 +12,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+extern bool __instanced;
 extern bool __allow_color;
-
-#define err_init                                                 \
-	do {                                                     \
-		bool nocolor = getenv("NOCOLOR") != NULL;        \
-		const char *term = getenv("TERM");               \
-		bool dumb = (term && strcmp(term, "dumb") == 0); \
-		__allow_color = !(nocolor || dumb);              \
-	} while (0)
 
 void errorf(const char *format, ...);
 void fatalf(const char *format, ...);
