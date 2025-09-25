@@ -3,5 +3,6 @@ GCK gcklib - TODO
 Todo:
 
 	* flesh out documentaion [doc/gcklib.texi]
+	* factor out err_init: instance variable
 
 end of file TODO
