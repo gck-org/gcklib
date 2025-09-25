@@ -93,10 +93,10 @@ void hintf(const char *format, ...)
 #ifdef NOCOLOR
 	fputs("hint: ", stderr);
 #else
-	fprintf(stderr, "%shint%s: ", HINT, RESET);
+	fprintf(stderr, "%shint: ", HINT);
 #endif
 	vfprintf(stderr, format, args);
-	fputc('\n', stderr);
+	fprintf(stderr, "%s\n", RESET);
 
 	va_end(args);
 }
