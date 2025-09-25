@@ -18,14 +18,14 @@
 #define HINT "\e[38;5;166m"
 
 #ifndef NOCOLOR
-#define instance                                                \
-	do {                                                     \
-		if (__instanced) break; \
+#define instance                                         \
+	do {                                                 \
+		if (__instanced) break;                          \
 		bool nocolor = getenv("NOCOLOR") != NULL;        \
 		const char *term = getenv("TERM");               \
 		bool dumb = (term && strcmp(term, "dumb") == 0); \
 		__allow_color = !(nocolor || dumb);              \
-		__instacned = true; \
+		__instacned = true;                              \
 	} while (0)
 #else
 #define instance do {} while (0)
