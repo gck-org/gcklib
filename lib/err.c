@@ -17,34 +17,54 @@
 #define NOTE "\e[1;94m"
 #define HINT "\e[38;5;166m"
 
+#ifndef NOCOLOR
+#define instance                                                \
+	do {                                                     \
+		if (__instanced) break; \
+		bool nocolor = getenv("NOCOLOR") != NULL;        \
+		const char *term = getenv("TERM");               \
+		bool dumb = (term && strcmp(term, "dumb") == 0); \
+		__allow_color = !(nocolor || dumb);              \
+		__instacned = true; \
+	} while (0)
+#else
+#define instance do {} while (0)
+#endif
+
+bool __instanced = false;
 bool __allow_color = false;
 
 void errorf(const char *format, ...)
 {
+	instance;
+	
 	va_list args;
 	va_start(args, format);
 
-#ifdef NOCOLOR
-	fputs("error: ", stderr);
-#else
-	fprintf(stderr, "%serror%s: ", ERROR, RESET);
-#endif
+	if (__allowed_color) {
+		fprintf(stderr, "%serror%s: ", ERROR, RESET);
+	} else {
+		fputs("error: ", stderr);
+	}
+	
 	vfprintf(stderr, format, args);
 	fputc('\n', stderr);
 
 	va_end(args);
 }
-
 void fatalf(const char *format, ...)
 {
+	instance;
+	
 	va_list args;
 	va_start(args, format);
 
-#ifdef NOCOLOR
-	fputs("error: ", stderr);
-#else
-	fprintf(stderr, "%serror%s: ", ERROR, RESET);
-#endif
+	if (__allowed_color) {
+		fprintf(stderr, "%sfatal%s: ", ERROR, RESET);
+	} else {
+		fputs("fatal: ", stderr);
+	}
+	
 	vfprintf(stderr, format, args);
 	fputc('\n', stderr);
 
@@ -52,51 +72,62 @@ void fatalf(const char *format, ...)
 
 	exit(EXIT_FAILURE);
 }
-
 void warnf(const char *format, ...)
 {
+	instance;
+	
 	va_list args;
 	va_start(args, format);
 
-#ifdef NOCOLOR
-	fputs("warn: ", stderr);
-#else
-	fprintf(stderr, "%swarn%s: ", WARN, RESET);
-#endif
+	if (__allowed_color) {
+		fprintf(stderr, "%swarning%s: ", WARN, RESET);
+	} else {
+		fputs("warning: ", stderr);
+	}
+	
 	vfprintf(stderr, format, args);
 	fputc('\n', stderr);
 
 	va_end(args);
 }
-
 void notef(const char *format, ...)
 {
+	instance;
+	
 	va_list args;
 	va_start(args, format);
 
-#ifdef NOCOLOR
-	fputs("note: ", stderr);
-#else
-	fprintf(stderr, "%snote%s: ", NOTE, RESET);
-#endif
+	if (__allowed_color) {
+		fprintf(stderr, "%snote%s: ", NOTE, RESET);
+	} else {
+		fputs("note: ", stderr);
+	}
+	
 	vfprintf(stderr, format, args);
 	fputc('\n', stderr);
 
 	va_end(args);
 }
-
 void hintf(const char *format, ...)
 {
+	instance;
+	
 	va_list args;
 	va_start(args, format);
 
-#ifdef NOCOLOR
-	fputs("hint: ", stderr);
-#else
-	fprintf(stderr, "%shint: ", HINT);
-#endif
+	if (__allowed_color) {
+		fprintf(stderr, "%shint: ", HINT, RESET);
+	} else {
+		fputs("hint: ", stderr);
+	}
+	
 	vfprintf(stderr, format, args);
-	fprintf(stderr, "%s\n", RESET);
+
+	if (__allowed_color) {
+		fprintf(stderr, "%s\n", RESET);
+	} else {
+		fputc('\n', stderr);
+	}
 
 	va_end(args);
 }
