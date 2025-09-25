@@ -13,6 +13,7 @@
 #include <string.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#include "err.h"
 
 #include "fs.h"
 
@@ -148,7 +149,7 @@ FILE *fs_temp()
 	FILE *fptr = tmpfile();
 
 	if (!fptr) {
-		perror("tmpfile failed");
+		errorf("tmpfile failed");
 		return NULL;
 	}
 
