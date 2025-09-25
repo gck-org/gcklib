@@ -14,5 +14,6 @@ run() {
 
 run sh ./tools/format
 run find test -type d -exec sh -c 'cd "{}" && [ -f Makefile ] && make clean' \;
+run make -C doc clean
 
 echo "done."

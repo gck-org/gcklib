@@ -1,20 +1,20 @@
+# Makefile for gcklib manual
+
 TEXI = gcklib.texi
 INFO = gcklib.info
 PDF  = gcklib.pdf
 HTML = gcklib.html
 
-all: info pdf man
+all: $(INFO) $(PDF) $(HTML)
 
-info: $(TEXI)
-	makeinfo $(TEXI)
+$(INFO): $(TEXI)
+	makeinfo --force --no-split -o $@ $<
 
-pdf: $(TEXI)
-	texi2pdf $(TEXI)
+$(PDF): $(TEXI)
+	texi2pdf --batch $< -o $@
 
-html: $(HTML)
-	texi2html
+$(HTML): $(TEXI)
+	makeinfo --html --no-split -o $@ $<
 
 clean:
-	rm -f $(INFO) $(PDF) $(HTML) *.aux *.log *.toc *.cp *.fn *.ky *.pg *.tp *.vr *.cps
-
-.PHONY: all info pdf html clean
+	$(RM) $(INFO) $(PDF) $(HTML) *.aux *.log *.toc *.cp *.fn *.ky *.pg *.tp *.vr *.cps *.fns
