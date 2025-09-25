@@ -106,16 +106,44 @@ provided.
 This section describes selected variables, functions, and macros
 exported by GCKLIB.
 
-@deftypevr {int} Variable gck_example_count
-This variable tracks the number of example objects managed by GCKLIB.
-@end deftypevr
-
-@deftypefn {Function} void gck_example_init (void)
-Initializes the GCK example subsystem.
+@deftypefn {Function} void errorf (const char* format, ...)
+Prints an error message.
 @end deftypefn
 
-@deftypefn {Function} void gck_example_free (void)
-Frees resources allocated by the GCK example subsystem.
+@deftypefn {Function} void fatalf (const char*format, ...)
+Prints an error message and exits.
+@end deftypefn
+
+@deftypefn {Function} void notef (const char* format, ...)
+Prints a note.
+@end deftypefn
+
+@deftypefn {Function} void warnf (const char* format, ...)
+Prints a warning
+@end deftypefn
+
+@deftypefn {Function} void hintf (const char* format, ...)
+Prints a hint.
+@end deftypefn
+
+@deftypefn {Function} void errorfa (int code)
+Prints an error message based on the strerror of code.
+@end deftypefn
+
+@deftypefn {Function} void fatalfa (int code)
+Prints an error message based on the strerror of code, then exits.
+@end deftypefn
+
+@deftypefn {Function} void notefa (int code)
+Prints a note message based on the strerror of code.
+@end deftypefn
+
+@deftypefn {Function} void warnfa (int code)
+Prints a warning message based on the strerror of code.
+@end deftypefn
+
+@deftypefn {Function} void hintfa (int code)
+Prints a hint message based on the strerror of code.
 @end deftypefn
 
 @bye
