@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "config.h"
 
 #include "proginfo.h"
 
@@ -21,7 +22,7 @@ void set_prog_name(const char *name)
 
 void emit_try_help()
 {
-	printf("Try '%s --help' for more information", prog_name);
+	printf("Try '%s --help' for more information\n", prog_name);
 }
 
 void emit_version()
