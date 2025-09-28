@@ -9,12 +9,6 @@
 #ifndef ERR_H
 #define ERR_H
 
-#include <stdlib.h>
-#include <string.h>
-
-extern bool __instanced;
-extern bool __allow_color;
-
 void errorf(const char *format, ...);
 void fatalf(const char *format, ...);
 void notef(const char *format, ...);

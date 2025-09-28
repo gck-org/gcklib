@@ -3,6 +3,5 @@ GCK gcklib - TODO
 Todo:
 
 	* flesh out documentaion [doc/gcklib.texi]
-	* vector: look into macro for automatic data type size detection.
 
 end of file TODO

@@ -3,8 +3,6 @@
 
 int main(int argc, char **argv)
 {
-	err_init;
-
 	errorfa(0);
 	warnfa(0);
 	notefa(0);
