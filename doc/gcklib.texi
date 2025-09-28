@@ -106,6 +106,14 @@ provided.
 This section describes selected variables, functions, and macros
 exported by GCKLIB.
 
+@deftypefn {Function} int conf_parse (struct config *cfg, const char *key)
+This function parses the config at the given path sets the given config context.
+@end deftypefn
+
+@deftypefn {Function} const char *conf_get (struct config *cfg, const char *key)
+This function returns the value of the key in a struct.
+@end deftypefn
+
 @deftypefn {Function} void errorf (const char* format, ...)
 This function prints out an error message. By default, it uses color but that can be turned off by defining NOCOLOR, and automatically on systems that don't support it.
 @end deftypefn
@@ -144,6 +152,97 @@ This function prints out a message based on the error code passed. By default, i
 
 @deftypefn {Function} void hintfa (int code)
 This function prints out a message based on the error code passed. By default, it uses color but that can be turned off by defining NOCOLOR, and automatically on systems that don't support it.
+@end deftypefn
+
+@deftypefn {Function} char *fs_read(const char *path)
+Reads the entire file at path.
+@end deftypefn
+
+@deftypefn {Function} bool fs_exists(const char *path)
+Checks if file exists.
+@end deftypefn
+
+@deftypefn {Function} int fs_append(const char *path, const char *format, ...)
+Append to the file at path.
+@end deftypefn
+
+@deftypefn {Function} int fs_del(const char *path)
+Deletes the file at path.
+@end deftypefn
+
+@deftypefn {Function} int fs_new(const char *path);
+Creates a file a path.
+@end deftypefn
+
+@deftypefn {Function} int fs_write(const char *path, const char *format, ...)
+Write to the file at path.
+@end deftypefn
+
+@deftypefn {Function} FILE *fs_temp()
+Get a temp file.
+@end deftypefn
+
+@deftypefn {Function} void set_prog_name(const char *name)
+Set the program name. Most of the time used with argv[0].
+
+@example
+set_prog_name(argv[0]);
+@end example
+
+@end deftypefn
+
+@deftypefn {Function} void emit_try_help()
+Must be called after set_prog_name. Emits to the user, suggesting they
+try to run the program with the @command{--help} flag.
+@end deftypefn
+
+@deftypefn {Function} void emit_version()
+Must be called after set_prog_name and have a GCK standard config.h
+included. Emits the standard GCK verion output.
+@end deftypefn
+
+@deftypefn {Function} int parse_standard_options(int argc, char **argv, void (*usage)(int), void (*version)())
+Parses @command{--help} and @command{--version} flags, then runs the provided functions.
+@end deftypefn
+
+@deftypefn {Function} char *str_dup(char *s)
+Duplicates the provided string.
+@end deftypefn
+
+@deftypefn {Function} vec_t vec_init(size_t esz)
+Creates and returns a vector with elements of size esz.
+@end deftypefn
+
+@deftypefn {Function} vec_t vec_free(vec_t *v)
+Free the memory used by the vector.
+@end deftypefn
+
+@deftypefn {Function} void *vec_get(vec_t *v, size_t i);
+Get the element from vector v at index i.
+@end deftypefn
+
+@deftypefn {Function} int vec_set(vec_t *v, size_t i, void *elem);
+Set the element at index i in vector i to elem.
+@end deftypefn
+
+@deftypefn {Function} int vec_append(vec_t *v, void *elem);
+Append to the end of the vector.
+@end deftypefn
+
+@deftypefn {Function} int vec_remove(vec_t *v)
+Remove the last element of the vector.
+@end deftypefn
+
+@deftypefn {Function} void *xmalloc(size_t size)
+Same functionality as malloc, but errors on failure.
+@end deftypefn
+
+@deftypefn {Function} void *xremalloc(void *ptr, size_t size)
+Same functionality as realloc, but errors on failure.
+@end deftypefn
+
+@deftypefn {Function} void *xcmalloc(size_t nmemb, size_t size)
+Same functionality as calloc, but errors on failure.
 @end deftypefn
 
 @bye
