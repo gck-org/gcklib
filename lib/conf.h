@@ -29,7 +29,7 @@ struct config {
 	size_t count;
 };
 
-int conf_parse(const char *path, struct config *cfg);
+int conf_parse(struct config *cfg, const char *path);
 const char *conf_get(struct config *cfg, const char *key);
 
 #endif

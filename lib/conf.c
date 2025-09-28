@@ -26,9 +26,9 @@ static char *trim(char *s)
 	return s;
 }
 
-int conf_parse(const char *filename, struct config *cfg)
+int conf_parse(struct config *cfg, const char *path)
 {
-	FILE *f = fopen(filename, "r");
+	FILE *f = fopen(path, "r");
 	if (!f)
 		return -1;
 
