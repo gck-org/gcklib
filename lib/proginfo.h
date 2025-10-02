@@ -11,7 +11,7 @@
 
 extern const char *prog_name;
 
-void set_prog_name(const char *name);
+void set_prog_name(char *name);
 
 void emit_try_help();
 void emit_version();

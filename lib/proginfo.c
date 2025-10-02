@@ -9,15 +9,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "../config.h"
+#include <libgen.h>
+#include <config.h>
 
 #include "proginfo.h"
 
 const char *prog_name = "";
 
-void set_prog_name(const char *name)
+void set_prog_name(char *name)
 {
-	prog_name = prog_name ? name : "";
+	prog_name = prog_name ? basename(name) : "";
 }
 
 void emit_try_help()
