@@ -37,12 +37,12 @@ There is NO WARRNTY, to the extent permitted by law.\n\
 	       prog_name, VERSION, COMMIT, YEAR);
 }
 
-int parse_standard_options(int argc, char **argv, void (*usage)(int),
-			   void (*version)())
+int parse_standard_options(int argc, char **argv, void (*print_help)(),
+			   void (*print_version)())
 {
 	for (int i = 0; i < argc; ++i) {
 		if (!strcmp(argv[i], "--help")) {
-			usage(0);
+			print_help();
 			exit(EXIT_SUCCESS);
 		} else if (!strcmp(argv[i], "--version")) {
 			emit_version();
