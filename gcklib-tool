@@ -57,7 +57,7 @@ visit() {
 }
 
 import() {
-    mkdir ../lib
+    mkdir -p ../lib
     module=$(echo "$1" | xargs)
     [ -z "$module" ] && fatal "no module given to import"
 
@@ -83,7 +83,8 @@ remove() {
 
 update() {
     if [ $# -eq 0 ]; then
-        for f in lib/*.c; do
+        for f in "$lib"/*.c; do
+            [ -f "$f" ] || continue
             m=$(basename "$f" .c)
             update "$m"
         done
@@ -91,9 +92,11 @@ update() {
     fi
 
     module=$(echo "$1" | xargs)
+    [ -z "$module" ] && fatal "no module given to update"
+
     for ext in c h; do
-        src="lib/${module}.${ext}"
-        dst="../lib/${module}.${ext}"
+        src="$lib/${module}.${ext}"
+        dst="../$lib/${module}.${ext}"
         if [ -f "$src" ]; then
             if [ ! -f "$dst" ] || [ "$(stat -c %Y "$src")" -gt "$(stat -c %Y "$dst")" ]; then
                 cp "$src" "$dst"
