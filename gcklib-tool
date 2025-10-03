@@ -57,6 +57,7 @@ visit() {
 }
 
 import() {
+    mkdir ../lib
     module=$(echo "$1" | xargs)
     [ -z "$module" ] && fatal "no module given to import"
 
