@@ -2,7 +2,6 @@ GCK gcklib - TODO
 
 Todo:
 
-  * flag: getopt_long
-  * research <> syntax for config.h [lib/proginfo]
+  * readline
 
 end of file TODO
