@@ -8,5 +8,6 @@ Todo:
      & textc_sanitize(src, exclude-or-include-toggle, charset);
      & textc_sanitize_email, textc_sanitize_number, textc_sanitize_alpha, textc_sanitize_alphanumeric
   * textc: textc_trim, textc_pad_left, textc_pad_right
+  * err: warn about no color env
 
 end of file TODO
