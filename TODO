@@ -3,6 +3,10 @@ GCK gcklib - TODO
 Todo:
 
   * readline
-  * refine errorf and fatalf into error(exit, code, msg)
+  * refine error and fatal into *.f(status, num, format); on error set exit status
+  * sanitize string
+     & textc_sanitize(src, exclude-or-include-toggle, charset);
+     & textc_sanitize_email, textc_sanitize_number, textc_sanitize_alpha, textc_sanitize_alphanumeric
+  * textc: textc_trim, textc_pad_left, textc_pad_right
 
 end of file TODO
