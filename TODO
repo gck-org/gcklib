@@ -3,5 +3,6 @@ GCK gcklib - TODO
 Todo:
 
   * readline
+  * refine errorf and fatalf into error(exit, code, msg)
 
 end of file TODO
