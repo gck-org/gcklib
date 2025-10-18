@@ -14,6 +14,7 @@
 
 #include "proginfo.h"
 
+/* TODO(vx-clutch): default this to argv[0] */
 const char *prog_name = "";
 
 void set_prog_name(char *name)
