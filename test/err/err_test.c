@@ -1,4 +1,3 @@
-#include <stdbool.h>
 #include "../../lib/err.h"
 
 int main(int argc, char **argv)
@@ -8,7 +7,7 @@ int main(int argc, char **argv)
 	notefa(0);
 	hintfa(0);
 
-	fatalf("all err tests passed");
+	gcklib_error(1, -1, "all err tests passed");
 
 	return 0;
 }

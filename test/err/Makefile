@@ -1,8 +1,8 @@
 TESTEE = err
-MODDEPS = err
+MODDEPS = err proginfo
 
 CC = gcc
-CFLAGS = -Wall -Wextra -I../../lib -g --std=c23
+CFLAGS = -Wall -Wextra -I../../lib -g --std=c23 -I. -DCOMMIT=1024
 _MODDEPS = $(addprefix ../../lib/,$(addsuffix .c,$(MODDEPS)))
 
 all: $(TESTEE)

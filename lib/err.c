@@ -6,35 +6,67 @@
  * <https://opensource.org/licenses/BSD-3-Clause>
  */
 
-#include <stdio.h>
 #include <stdarg.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 
 #include "err.h"
 
-#define RESET "\e[0m"
-#define ERROR "\e[1;91m"
-#define WARN "\e[1;95m"
-#define NOTE "\e[1;94m"
-#define HINT "\e[38;5;166m"
+#include "proginfo.h"
 
-static bool __check(void)
+#define RESET "\x1B[0m"
+#define ERROR "\x1B[1;91m"
+#define WARN "\x1B[1;95m"
+#define NOTE "\x1B[1;94m"
+#define HINT "\x1B[38;5;166m"
+
+static bool err_support_color(void)
 {
-	static int done = 0;
-	static bool cached = false;
-
-	if (!done) {
-		const char *term = getenv("TERM");
-		cached = isatty(STDOUT_FILENO) && term != NULL &&
-			 (strstr(term, "color") != NULL ||
-			  strstr(term, "ansi") != NULL ||
-			  strstr(term, "xterm") != NULL);
-		done = 1;
+#ifdef NOCOLOR
+	return false;
+#else
+	static int cached = -1;
+	if (cached != -1)
+		return cached;
+	const char *term, *colorterm, *force, *nocolor;
+	term = getenv("TERM");
+	colorterm = getenv("COLORTERM");
+	force = getenv("FORCE_COLOR");
+	nocolor = getenv("NO_COLOR");
+	if (nocolor && *nocolor && (!force || !*force)) {
+		cached = 0;
+		return false;
 	}
-
-	return cached;
+	if (force && *force && strcmp(force, "0") != 0) {
+		cached = 1;
+		return true;
+	}
+	// if (!isatty(fileno(stdout))) {
+	// 	cached = 0;
+	// 	return false;
+	// }
+	if (colorterm && *colorterm) {
+		cached = 1;
+		return true;
+	}
+	if (!term || !*term) {
+		cached = 0;
+		return false;
+	}
+	if (strstr(term, "color") || strstr(term, "xterm") ||
+	    strstr(term, "screen") || strstr(term, "vt100") ||
+	    strstr(term, "rxvt") || strstr(term, "ansi") ||
+	    strstr(term, "linux") || strstr(term, "konsole") ||
+	    strstr(term, "vte") || strstr(term, "kitty") ||
+	    strstr(term, "wezterm") || strstr(term, "gnome")) {
+		cached = 1;
+		return true;
+	}
+	cached = 0;
+	return false;
+#endif
 }
 
 void errorf(const char *format, ...)
@@ -42,7 +74,7 @@ void errorf(const char *format, ...)
 	va_list args;
 	va_start(args, format);
 
-	if (__check()) {
+	if (err_support_color()) {
 		fprintf(stderr, "%serror%s: ", ERROR, RESET);
 	} else {
 		fputs("error: ", stderr);
@@ -58,7 +90,7 @@ void fatalf(const char *format, ...)
 	va_list args;
 	va_start(args, format);
 
-	if (__check()) {
+	if (err_support_color()) {
 		fprintf(stderr, "%sfatal error%s: ", ERROR, RESET);
 	} else {
 		fputs("fatal error: ", stderr);
@@ -77,7 +109,7 @@ void warnf(const char *format, ...)
 	va_list args;
 	va_start(args, format);
 
-	if (__check()) {
+	if (err_support_color()) {
 		fprintf(stderr, "%swarning%s: ", WARN, RESET);
 	} else {
 		fputs("warning: ", stderr);
@@ -93,7 +125,7 @@ void notef(const char *format, ...)
 	va_list args;
 	va_start(args, format);
 
-	if (__check()) {
+	if (err_support_color()) {
 		fprintf(stderr, "%snote%s: ", NOTE, RESET);
 	} else {
 		fputs("note: ", stderr);
@@ -109,7 +141,7 @@ void hintf(const char *format, ...)
 	va_list args;
 	va_start(args, format);
 
-	if (__check()) {
+	if (err_support_color()) {
 		fprintf(stderr, "%shint: ", HINT);
 	} else {
 		fputs("hint: ", stderr);
@@ -117,7 +149,7 @@ void hintf(const char *format, ...)
 
 	vfprintf(stderr, format, args);
 
-	if (__check()) {
+	if (err_support_color()) {
 		fprintf(stderr, "%s\n", RESET);
 	} else {
 		fputc('\n', stderr);
@@ -149,4 +181,23 @@ void warnfa(int code)
 void hintfa(int code)
 {
 	hintf(strerror(code));
+}
+
+void gcklib_error(int status, int errnum, const char *format, ...)
+{
+    va_list ap;
+    char buf[512];
+    int n;
+
+    va_start(ap, fmt);
+    n = vsnprintf(buf, sizeof(buf), format, ap);
+    va_end(ap);
+
+    if (errnum && n > 0 && n < (int)sizeof(buf))
+        snprintf(buf + n, sizeof(buf) - n, ": %s", strerror(errnum));
+
+    if (status)
+        fatalf("%s", buf);
+    else
+        errorf("%s", buf);
 }
