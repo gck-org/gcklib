@@ -13,6 +13,14 @@
 #include <sys/ioctl.h>
 #include <stdlib.h>
 #include <stdarg.h>
+#include <string.h>
+
+void alert()
+{
+	fputs("\a", stderr);
+	fflush(stderr);
+	return;
+}
 
 int vasprintf(char **buf, const char *fmt, va_list ap)
 {

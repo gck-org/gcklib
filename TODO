@@ -5,6 +5,6 @@ Todo:
   * readline
   * textc: textc_trim, textc_pad_left, textc_pad_right
   * asprintf
-	* word suggestion: forcee -> force
+  * word suggestion: forcee -> force
 
 end of file TODO

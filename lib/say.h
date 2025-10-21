@@ -15,6 +15,8 @@ int asprintf(char **buf, const char *fmt, ...);
 int vasprintf(char **buf, const char *fmt, va_list ap);
 int say(const char *restrict format, ...);
 
+void alert();
+
 _Noreturn void die(const char *msg);
 
 #endif
