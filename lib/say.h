@@ -11,8 +11,8 @@
 
 #include <stdarg.h>
 
-int asprintf(char **restrict strp, const char *restrict format, ...);
-int vasprintf(char **restrict strp, const char *restrict format, va_list ap);
+int asprintf(char **buf, const char *fmt, ...);
+int vasprintf(char **buf, const char *fmt, va_list ap);
 int say(const char *restrict format, ...);
 
 _Noreturn void die(const char *msg);

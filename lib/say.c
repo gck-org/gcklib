@@ -14,14 +14,20 @@
 #include <stdlib.h>
 #include <stdarg.h>
 
-int asprintf(char **restrict strp, const char *restrict format, ...)
+int vasprintf(char **buf, const char *fmt, va_list ap)
 {
-	return 0;
+	int total_width = strlen(fmt) + 1;
+	return -1;
 }
 
-int vasprintf(char **restrict strp, const char *restrict format, va_list ap)
+int asprintf(char **buf, const char *fmt, ...)
 {
-	return 0;
+	int status;
+	va_list ap;
+	va_start(ap, fmt);
+	status = vasprintf(buf, fmt, ap);
+	va_end(ap);
+	return status;
 }
 
 int say(const char *restrict format, ...)
