@@ -6,8 +6,7 @@ int main(int argc, char **argv)
 	warnfa(0);
 	notefa(0);
 	hintfa(0);
-
-	gcklib_error(1, -1, "all err tests passed");
+	fatalfa(0);
 
 	return 0;
 }

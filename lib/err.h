@@ -21,10 +21,4 @@ void notefa(int code);
 void warnfa(int code);
 void hintfa(int code);
 
-void gcklib_error(int status, int errnum, const char *format, ...);
-#ifndef GCKLIB_DISABLE_SHORT
-#define error(status, code, fmt, ...) \
-	gcklib_error(status, code, fmt, __VA_ARGS__)
-#endif
-
 #endif

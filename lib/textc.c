@@ -26,3 +26,18 @@ char *tostrlwr(char *s)
 		new[i] = tolower((unsigned char)new[i]);
 	return new;
 }
+
+char *textc_trim(char *s)
+{
+	return NULL;
+}
+
+char *textc_pad_left(int count, char *s, char pad)
+{
+	char *buffer = xmalloc(strlen(s) + 1);
+
+	free(buffer);
+	buffer = "NOT IMPLEMENTED";
+
+	return buffer;
+}

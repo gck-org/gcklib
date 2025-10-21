@@ -182,22 +182,3 @@ void hintfa(int code)
 {
 	hintf(strerror(code));
 }
-
-void gcklib_error(int status, int errnum, const char *format, ...)
-{
-    va_list ap;
-    char buf[512];
-    int n;
-
-    va_start(ap, fmt);
-    n = vsnprintf(buf, sizeof(buf), format, ap);
-    va_end(ap);
-
-    if (errnum && n > 0 && n < (int)sizeof(buf))
-        snprintf(buf + n, sizeof(buf) - n, ": %s", strerror(errnum));
-
-    if (status)
-        fatalf("%s", buf);
-    else
-        errorf("%s", buf);
-}
