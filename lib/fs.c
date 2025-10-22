@@ -117,7 +117,7 @@ int fs_append(const char *path, const char *format, ...)
 {
 	FILE *fp = fopen(path, "a");
 	if (!fp)
-		RETURN(-1);
+		RETURN(errno);
 
 	va_list ap;
 	va_start(ap, format);
@@ -126,11 +126,11 @@ int fs_append(const char *path, const char *format, ...)
 
 	if (ret < 0) {
 		fclose(fp);
-		RETURN(-1);
+		RETURN(errno);
 	}
 
 	if (fclose(fp) != 0)
-		RETURN(-1);
+		RETURN(errno);
 
 	return ret;
 }
