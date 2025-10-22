@@ -1,6 +1,12 @@
 /*
  *   gcklib.fs - Contains file system related iterations
  *
+ *   CONFIGURATION
+ *       #define FS_ERROR_ON
+ *           Error instead of fatal on failure
+ *       #define FS_FATAL_OFF
+ *           Disable auto fatal on failure
+ *
  *
  *   LICENSE: BSD-3-Clause
  *
@@ -39,23 +45,37 @@
 #include <string.h>
 #include <sys/stat.h>
 #include <unistd.h>
-#include "err.h"
 
 #include "fs.h"
+
+#include "err.h"
+#include "xmem.h"
+
+#if defined(FS_ERROR_ON)
+#define RETURN(code)   \
+	errorfa(code); \
+	return code
+#elif defined(FS_FATAL_OFF)
+#define RETURN(code) return code
+#else
+#define RETURN(code) fatalfa(code)
+#endif
 
 char *fs_read(const char *path)
 {
 	FILE *fptr = fopen(path, "r");
-	if (!fptr)
+	if (!fptr) {
+#if defined(FS_ERROR_ON)
+		errorfa(errno);
+#elif defined(FS_FATAL_ON)
+		fatalfa(errno);
+#endif
 		return NULL;
+	}
 
 	size_t cap = 1024;
 	size_t len = 0;
-	char *buf = malloc(cap);
-	if (!buf) {
-		fclose(fptr);
-		return NULL;
-	}
+	char *buf = xmalloc(cap);
 
 	int c;
 	while ((c = fgetc(fptr)) != EOF) {
@@ -89,6 +109,7 @@ bool fs_exists(const char *path)
 		exists = false;
 	}
 
+	fclose(fptr);
 	return exists;
 }
 
@@ -96,7 +117,7 @@ int fs_append(const char *path, const char *format, ...)
 {
 	FILE *fp = fopen(path, "a");
 	if (!fp)
-		return -1;
+		RETURN(-1);
 
 	va_list ap;
 	va_start(ap, format);
@@ -105,18 +126,18 @@ int fs_append(const char *path, const char *format, ...)
 
 	if (ret < 0) {
 		fclose(fp);
-		return -1;
+		RETURN(-1);
 	}
 
 	if (fclose(fp) != 0)
-		return -1;
+		RETURN(-1);
 
 	return ret;
 }
 
 int fs_del(const char *path)
 {
-	return remove(path);
+	RETURN(remove(path));
 }
 
 int fs_new(const char *path)
@@ -126,22 +147,22 @@ int fs_new(const char *path)
 
 	if (path == NULL) {
 		errno = EINVAL;
-		return -1;
+		RETURN(-1);
 	}
 
 	len = strlen(path);
 	if (len == 0) {
 		errno = EINVAL;
-		return -1;
+		RETURN(-1);
 	}
 
 	if (path[len - 1] == '/') {
 		if (mkdir(path, 0777) == -1)
-			return -1;
+			RETURN(-1);
 	} else {
 		fd = open(path, O_CREAT | O_EXCL | O_WRONLY, 0666);
 		if (fd == -1)
-			return -1;
+			RETURN(-1);
 		close(fd);
 	}
 
@@ -152,7 +173,7 @@ int fs_write(const char *path, const char *format, ...)
 {
 	FILE *fptr = fopen(path, "w");
 	if (!fptr)
-		return -1;
+		RETURN(-1);
 
 	va_list ap;
 	va_start(ap, format);
@@ -161,11 +182,11 @@ int fs_write(const char *path, const char *format, ...)
 
 	if (ret < 0) {
 		fclose(fptr);
-		return -1;
+		RETURN(-1);
 	}
 
 	if (fclose(fptr) != 0)
-		return -1;
+		RETURN(-1);
 
 	return ret;
 }
@@ -175,7 +196,11 @@ FILE *fs_temp()
 	FILE *fptr = tmpfile();
 
 	if (!fptr) {
-		errorf("tmpfile failed");
+#if defined(FS_ERROR_ON)
+		errorf("tmp failed");
+#elif defined(FS_FATAL_ON)
+		fatalf("tmp failed");
+#endif
 		return NULL;
 	}
 
