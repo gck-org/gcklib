@@ -1,5 +1,5 @@
 TESTEE = say
-MODDEPS = say
+MODDEPS = say xmem err
 
 CC = gcc
 CFLAGS = -Wall -Wextra -I../../lib -g --std=c23

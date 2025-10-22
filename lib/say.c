@@ -41,6 +41,8 @@
 #include <stdarg.h>
 #include <string.h>
 
+#include "xmem.h"
+
 void alert()
 {
 	fputs("\a", stderr);
@@ -48,10 +50,11 @@ void alert()
 	return;
 }
 
-int vasprintf(char **buf, const char *fmt, va_list ap)
+int vasprintf(char **result, const char *fmt, va_list ap)
 {
 	int total_width = strlen(fmt) + 1;
-	return -1;
+	*result = (char *)xmalloc(total_width);
+	return vsprintf(*result, fmt, ap);
 }
 
 int asprintf(char **buf, const char *fmt, ...)
