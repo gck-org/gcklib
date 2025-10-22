@@ -4,6 +4,8 @@
  *   CONFIGURATION
  *       #define NOCOLOR
  *           Force no color when printing
+ *       #define SHOW_TRACE
+ *           Add debug traces to error printing
  *
  *
  *   LICENSE: BSD-3-Clause
@@ -50,6 +52,15 @@ _Noreturn void fatalfa(int code);
 void notefa(int code);
 void warnfa(int code);
 void hintfa(int code);
+
+#if defined(SHOW_TRACE)
+#define errorf(fmt, ...)                             \
+	errorf("%s:%s:%d: " fmt, __FILE__, __func__, \
+	       __LINE__ __VA_OPT__(, ) __VA_ARGS__)
+#define fatalf(fmt, ...)                             \
+	fatalf("%s:%s:%d: " fmt, __FILE__, __func__, \
+	       __LINE__ __VA_OPT__(, ) __VA_ARGS__)
+#endif
 
 #endif
 
