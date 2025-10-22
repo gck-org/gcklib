@@ -1,6 +1,11 @@
 /*
  *   gcklib.conf - Configuration file interactions
  *
+ *   CONFIGURATION
+ *       #define ENTRIES
+ *           Number of entries (default 128)
+ *       #define LINES
+ *           Number of lines (default 256)
  *
  *   LICENSE: BSD-3-Clause
  *

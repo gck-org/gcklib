@@ -1,6 +1,10 @@
 /*
  *   gcklib.err - Contains color printing functions
  *
+ *   CONFIGURATION
+ *       #define NOCOLOR
+ *           Force no color when printing
+ *
  *
  *   LICENSE: BSD-3-Clause
  *
