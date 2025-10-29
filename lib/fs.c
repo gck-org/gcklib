@@ -61,6 +61,16 @@
 #define RETURN(code) fatalfa(code)
 #endif
 
+#if defined(FS_ERROR_ON)
+#define ERETURN()   \
+	errorfa(errno); \
+	return errno
+#elif defined(FS_FATAL_OFF)
+#define ERETURN() return errno
+#else
+#define ERETURN() fatalfa(errno)
+#endif
+
 char *fs_read(const char *path)
 {
 	FILE *fptr = fopen(path, "r");
@@ -147,22 +157,22 @@ int fs_new(const char *path)
 
 	if (path == NULL) {
 		errno = EINVAL;
-		RETURN(-1);
+		RETURN(errno);
 	}
 
 	len = strlen(path);
 	if (len == 0) {
 		errno = EINVAL;
-		RETURN(-1);
+		ERETURN;
 	}
 
 	if (path[len - 1] == '/') {
 		if (mkdir(path, 0777) == -1)
-			RETURN(-1);
+			ERETURN;
 	} else {
 		fd = open(path, O_CREAT | O_EXCL | O_WRONLY, 0666);
 		if (fd == -1)
-			RETURN(-1);
+			ERETURN;
 		close(fd);
 	}
 
@@ -173,7 +183,7 @@ int fs_write(const char *path, const char *format, ...)
 {
 	FILE *fptr = fopen(path, "w");
 	if (!fptr)
-		RETURN(-1);
+		ERETURN;
 
 	va_list ap;
 	va_start(ap, format);
@@ -182,11 +192,11 @@ int fs_write(const char *path, const char *format, ...)
 
 	if (ret < 0) {
 		fclose(fptr);
-		RETURN(-1);
+		ERETURN;
 	}
 
 	if (fclose(fptr) != 0)
-		RETURN(-1);
+		ERETURN;
 
 	return ret;
 }
